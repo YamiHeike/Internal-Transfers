@@ -1,3 +1,4 @@
+import Queries.Query;
 import Queries.Query1;
 import Queries.Query2;
 import Queries.Query3;
@@ -8,11 +9,12 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //jdbc:oracle:thin:@host:port/database
+        String query = "SELECT *\n" +
+                "FROM PRACOWNIK p, Klient k, OSOBA o\n" +
+                "WHERE p.PESEL = k.PESEL AND p.PESEL = o.PESEL";
 
-        //Query1 q = new Query1();
-        //Query2 noManager = new Query2();
-        Query3 q3 = new Query3();
+        Query1 employeesClients = new Query1();
+        Query2 noManager = new Query2();
+        Query3 fiveStarConsultations = new Query3();
     }
-
 }

@@ -1,1 +1,4 @@
 DatabaseInfo.java
+*.class
+./out
+./idea
