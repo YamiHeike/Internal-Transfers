@@ -1,20 +1,20 @@
-import Queries.Query;
-import Queries.Query1;
-import Queries.Query2;
-import Queries.Query3;
+import Entities.PeopleData;
+import Entities.Person;
 
-import java.sql.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 
 
     public static void main(String[] args) {
-        String query = "SELECT *\n" +
-                "FROM PRACOWNIK p, Klient k, OSOBA o\n" +
-                "WHERE p.PESEL = k.PESEL AND p.PESEL = o.PESEL";
+        int counter = 0;
+        //Person p1 = PeopleData.getInstance().getPerson(91092745678l);
+        Set<Person> personSet = new HashSet<>();
+        personSet = PeopleData.getInstance().getAllPeople();
 
-        Query1 employeesClients = new Query1();
-        Query2 noManager = new Query2();
-        Query3 fiveStarConsultations = new Query3();
+        for(Person person:personSet) {
+            System.out.println(++counter + ". " + person.getFirstName() + " " + person.getLastName() + "\nDate of birth: " + person.getDateOfBirth() + ".\nPESEL: " + person.getPESEL());
+        }
     }
 }

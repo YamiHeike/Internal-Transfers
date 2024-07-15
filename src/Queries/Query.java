@@ -10,6 +10,8 @@ public abstract class Query {
     String query;
 
     public Query(String query) {
+        /* Practice class */
+
         this.query = query;
         try {
             connection = ConnectivityManager.connect();
@@ -18,7 +20,6 @@ public abstract class Query {
             while(resultSet.next()) {
                 processData();
             }
-
             if(resultSet != null) resultSet.close();
             if(statement != null) statement.close();
             if(connection != null) connection.close();
