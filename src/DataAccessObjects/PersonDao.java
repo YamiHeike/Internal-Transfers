@@ -1,6 +1,6 @@
-package Entities;
+package DataAccessObjects;
 
-import DataAccessObjects.PersonDAO;
+import Entities.Person;
 import utils.ConnectivityManager;
 
 import java.sql.Connection;
@@ -8,30 +8,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-public class PeopleData implements PersonDAO {
-    private static PeopleData instance;
+public class PersonDao implements Dao<Person> {
+    private static PersonDao instance;
 
-    private PeopleData() {}
+    private PersonDao() {}
 
-    public static PeopleData getInstance() {
-        synchronized (PeopleData.class) {
+    public static PersonDao getInstance() {
+        synchronized (PersonDao.class) {
             if(instance == null) {
-                return new PeopleData();
+                return new PersonDao();
             }
             return instance;
         }
     }
 
-    public Person getPerson(Long pesel) {
+    @Override
+    public Optional<Person> get(Long pesel) {
         String query = "SELECT * FROM osoba WHERE PESEL = " + pesel;
         //Connection connection = null;
         try {
             Connection connection = ConnectivityManager.connect();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery(query);
-            while(resultSet.next()) return extractPerson(resultSet);
+            while(resultSet.next()){
+                return Optional.ofNullable(extractPerson(resultSet));
+            };
         } catch(ClassNotFoundException exc) {
             System.out.println("Unable to connect to the database");
             exc.printStackTrace();
@@ -43,7 +47,7 @@ public class PeopleData implements PersonDAO {
     }
 
     @Override
-    public Set<Person> getAllPeople() {
+    public Set<Person> getAll() {
         String query = "SELECT * FROM OSOBA";
         Set<Person> people = new HashSet<>();
         Connection connection = null;
@@ -74,17 +78,17 @@ public class PeopleData implements PersonDAO {
     }
 
     @Override
-    public boolean insertPerson(Person person) {
+    public boolean insert(Person person) {
         return false;
     }
 
     @Override
-    public boolean updatePerson(Person person) {
+    public boolean update(Person person) {
         return false;
     }
 
     @Override
-    public boolean deletePerson(Person person) {
+    public boolean delete(Person person) {
         return false;
     }
 }
