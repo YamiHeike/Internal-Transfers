@@ -78,17 +78,17 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public boolean insert(Person person) {
-        return false;
+    public void insert(Person person) {
+
     }
 
     @Override
-    public boolean update(Person person) {
-        return false;
+    public void update(Person person) {
+
     }
 
     @Override
-    public boolean delete(Person person) {
-        return false;
+    public void delete(Person person) {
+
     }
 }
