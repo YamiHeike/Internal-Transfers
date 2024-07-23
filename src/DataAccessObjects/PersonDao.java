@@ -1,7 +1,6 @@
 package DataAccessObjects;
 
 import Entities.Person;
-import Queries.Query;
 import utils.ConnectivityManager;
 
 import java.io.Serializable;
@@ -23,24 +22,35 @@ public class PersonDao implements Dao<Person>, Serializable {
             if(instance == null) {
                 return new PersonDao();
             }
-            return instance;
         }
+        return instance;
     }
 
     @Override
     public Optional<Person> get(Long pesel) {
-        String query = "SELECT * FROM OSOBA WHERE PESEL = ?";
-        try (Connection connection = ConnectivityManager.connect();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            String query = "SELECT * FROM OSOBA WHERE PESEL = ?";
+            connection = ConnectivityManager.connect();
+            statement = connection.prepareStatement(query);
             statement.setLong(1, pesel);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return Optional.ofNullable(extractPerson(resultSet));
-                }
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(extractPerson(resultSet));
             }
-        } catch (ClassNotFoundException | SQLException exc) {
+
+        }
+        catch (ClassNotFoundException | SQLException exc) {
             System.out.println("Unable to connect to the database or execute query");
             exc.printStackTrace();
+        } finally {
+            try {
+                close(resultSet, statement, connection);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return Optional.empty();
     }
@@ -138,5 +148,16 @@ public class PersonDao implements Dao<Person>, Serializable {
         }
     }
 
+    public void close(ResultSet rs, PreparedStatement stmt, Connection con) throws SQLException {
+        try {
+            try {
+                if (rs!=null) rs.close();
+            } finally {
+                if (stmt!=null) stmt.close();
+            }
+        } finally {
+            if (con!=null) con.close();
+        }
+    }
 
 }
