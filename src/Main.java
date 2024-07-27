@@ -1,6 +1,8 @@
 import DataAccessObjects.AccountTypeDao;
+import DataAccessObjects.EmployeeDao;
 import DataAccessObjects.PersonDao;
 import Entities.AccountType;
+import Entities.Employee;
 import Entities.Person;
 
 import java.sql.Date;
@@ -12,19 +14,13 @@ public class Main {
     public static void main(String[] args) {
         PersonDao pd = PersonDao.getInstance();
         AccountTypeDao atd = AccountTypeDao.getInstance();
+        EmployeeDao ed = EmployeeDao.getInstance();
         int counter = 0;
 
-        AccountType newAccountType = new AccountType(3,"Lokata");
-        //atd.insert(newAccountType);
-
-        newAccountType.setName("Walutowe");
-        atd.update(newAccountType);
-        //atd.delete(newAccountType);
-
-        Set<AccountType> accountTypeSet = atd.getAll();
-
-        for(AccountType accountType : accountTypeSet) {
-            System.out.println(accountType.getId() + ": " + accountType.getName());
+        Optional<Employee> e1 = ed.get(1l);
+        if (e1.isPresent()) {
+            System.out.println("Congratulations! The employee was fetched correctly. Here's their data:");
+            System.out.println(e1.get().toString());
         }
 
     }
